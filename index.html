@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário de Onboarding de Leads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // or 'media'
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                '50': '#EAF2F2',
+                '100': '#D5E5E4',
+                '200': '#ABCBC9',
+                '300': '#82B1AD',
+                '400': '#589792',
+                '500': '#2F6F6B',
+                '600': '#2A635F',
+                '700': '#204A47',
+                '800': '#16322F',
+                '900': '#0C1918',
+                '950': '#040808'
+              },
+              'earth-brown': '#8C4F3C',
+              'sky-gray': '#A8B1B5',
+              accent: {
+                'lime': '#7FD053',
+                'yellow': '#D4BE4A',
+                'dark-gray': '#333333',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in {
+        animation: fadeIn 0.4s ease-in-out;
+      }
+      
+      @keyframes fadeInBackdrop {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes scaleInModal {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+      }
+
+      .modal-backdrop {
+        animation: fadeInBackdrop 0.3s ease-out;
+      }
+
+      .modal-content {
+        animation: scaleInModal 0.3s ease-out;
+      }
+
+      /* Override browser autofill styles */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #FFFFFF inset !important;
+        -webkit-text-fill-color: #333333 !important;
+        transition: background-color 5000s ease-in-out 0s;
+      }
+      
+      html.dark input:-webkit-autofill,
+      html.dark input:-webkit-autofill:hover,
+      html.dark input:-webkit-autofill:focus,
+      html.dark input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #2D3748 inset !important; /* Cor de fundo escura (ex: gray-800) */
+        -webkit-text-fill-color: #F7FAFC !important; /* Cor de texto clara (ex: gray-100) */
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+</script>
+</head>
+  <body class="bg-primary-50 dark:bg-primary-950 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
