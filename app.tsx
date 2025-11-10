@@ -107,15 +107,11 @@ const OnboardingForm = ({ onGenerationComplete, onClose }: { onGenerationComplet
     setIsLoading(true);
     setApiError(null);
     try {
-      // Salva os dados no Supabase
       const { error: supabaseError } = await supabase.from('leads').insert([formData]);
       if (supabaseError) throw supabaseError;
       
-      // Chama a nossa nova API segura para gerar a mensagem
       fetch('/api/generate', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData) });
-      // Nota: Não esperamos pela resposta da IA para não bloquear o usuário.
-      // A chamada é "dispare e esqueça". A mensagem pode ser enviada por e-mail depois.
-
+      
       onGenerationComplete();
 
     } catch (error: any) {
@@ -183,7 +179,7 @@ const FinalStepScreen = ({ onClose }: { onClose: () => void; }) => {
         </p>
         
         <a 
-          href="https://chat.whatsapp.com/J1y5a7xZ8sL9cT0bK1fA0B"
+          href="https://SEU_LINK_DO_WHATSAPP_AQUI"
           target="_blank" 
           rel="noopener noreferrer"
           className="mt-4 inline-flex items-center gap-3 px-8 py-4 bg-green-500 text-white font-bold text-base rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-all duration-300 transform hover:scale-105"
