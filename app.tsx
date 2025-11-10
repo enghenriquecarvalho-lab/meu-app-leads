@@ -1,26 +1,13 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { supabase } from './services/supabaseClient';
+// IMPORTAÇÃO CORRIGIDA: Agora importamos as chaves para verificação
+import { supabase, supabaseUrl, supabaseAnonKey } from './services/supabaseClient';
 import { LeadData, Gender, EducationLevel, WorkStatus, CurrentPosition, MonthlyIncome, AiKnowledgeLevel } from './types';
 import FormField from './components/FormField';
 import Loader from './components/Loader';
 import { MailIcon, AlertTriangleIcon, CalendarIcon, AcademicCapIcon, BriefcaseIcon, BuildingOfficeIcon, UserGroupIcon, ChartBarIcon, LightBulbIcon, RocketLaunchIcon, PuzzlePieceIcon, BrainCircuitIcon, WhatsappIcon, XMarkIcon, PencilSquareIcon } from './components/IconComponents';
 
 const OnboardingForm = ({ onGenerationComplete, onClose }: { onGenerationComplete: () => void; onClose: () => void; }) => {
-  const initialFormData: LeadData = {
-    email: '',
-    birthDate: '',
-    gender: '',
-    education: '',
-    workStatus: '',
-    sector: '',
-    position: '',
-    income: '',
-    aiChallenge: '',
-    aiFocus: '',
-    aiGoals: '',
-    aiKnowledge: '',
-  };
-
+  const initialFormData: LeadData = { email: '', birthDate: '', gender: '', education: '', workStatus: '', sector: '', position: '', income: '', aiChallenge: '', aiFocus: '', aiGoals: '', aiKnowledge: '', };
   const [formData, setFormData] = useState<LeadData>(initialFormData);
   const [errors, setErrors] = useState<Partial<Record<keyof LeadData, string>>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -28,12 +15,7 @@ const OnboardingForm = ({ onGenerationComplete, onClose }: { onGenerationComplet
   const [currentStep, setCurrentStep] = useState(0);
 
   const radioOptions = {
-    gender: Object.values(Gender),
-    education: Object.values(EducationLevel),
-    workStatus: Object.values(WorkStatus),
-    position: Object.values(CurrentPosition),
-    income: Object.values(MonthlyIncome),
-    aiKnowledge: Object.values(AiKnowledgeLevel),
+    gender: Object.values(Gender), education: Object.values(EducationLevel), workStatus: Object.values(WorkStatus), position: Object.values(CurrentPosition), income: Object.values(MonthlyIncome), aiKnowledge: Object.values(AiKnowledgeLevel),
   };
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -117,7 +99,7 @@ const OnboardingForm = ({ onGenerationComplete, onClose }: { onGenerationComplet
     } catch (error: any) {
       console.error("Ocorreu um erro ao salvar os dados:", error);
       let errorMessage = 'Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.';
-      if (error.message?.toLowerCase().includes('fetch')) {
+      if (error instanceof Error && error.message.includes('Failed to fetch')) {
           errorMessage = 'Erro de conexão. Verifique suas chaves do Supabase ou a conexão com a internet.';
       }
       setApiError(errorMessage);
@@ -150,7 +132,7 @@ const OnboardingForm = ({ onGenerationComplete, onClose }: { onGenerationComplet
       <div key={currentStep} className="fade-in min-h-[190px]">{questions[currentStep].render()}</div>
       <div className="mt-6 flex justify-between items-center">
         <button type="button" onClick={handleBack} disabled={currentStep === 0} className="px-6 py-2 bg-sky-gray/20 text-accent-dark-gray dark:bg-sky-gray/30 dark:text-white font-semibold rounded-lg shadow-sm hover:bg-sky-gray/30 focus:outline-none focus:ring-2 focus:ring-sky-gray focus:ring-opacity-75 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">Voltar</button>
-        <button type="button" onClick={handleNext} disabled={isLoading} className="w-48 flex items-center justify-center bg-primary-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 transition-all duration-300 disabled:bg-primary-300 disabled:cursor-not-allowed">
+        <button type="button" onClick={handleNext} disabled={isLoading} className="w-48 flex items-center justify-center bg-primary-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-75 transition-all duration-300 disabled:bg-primary-300 disabled:cursor-not-allowed">
           {isLoading ? <Loader /> : (currentStep === totalSteps - 1 ? 'Finalizar Inscrição' : 'Avançar')}
         </button>
       </div>
@@ -179,7 +161,7 @@ const FinalStepScreen = ({ onClose }: { onClose: () => void; }) => {
         </p>
         
         <a 
-          href="https://SEU_LINK_DO_WHATSAPP_AQUI"
+          href="https://chat.whatsapp.com/Kf2SV4vhrcQ3GquzksnsRL"
           target="_blank" 
           rel="noopener noreferrer"
           className="mt-4 inline-flex items-center gap-3 px-8 py-4 bg-green-500 text-white font-bold text-base rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-all duration-300 transform hover:scale-105"
@@ -193,6 +175,31 @@ const FinalStepScreen = ({ onClose }: { onClose: () => void; }) => {
 
 
 const App: React.FC = () => {
+    // ADICIONADO: Verificação de segurança para as chaves do Supabase
+    if (supabaseUrl.includes('COLE_SUA_URL') || supabaseAnonKey.includes('COLE_SUA_CHAVE')) {
+        return (
+            <main className="min-h-screen w-full flex items-center justify-center p-4 bg-red-900 text-white">
+                <div className="text-center bg-red-800 p-8 rounded-lg shadow-2xl max-w-2xl border border-red-600">
+                    <AlertTriangleIcon className="w-16 h-16 mx-auto text-yellow-300" />
+                    <h1 className="text-4xl font-bold mt-4">Erro Crítico de Configuração</h1>
+                    <p className="text-lg mt-4">
+                        A aplicação não pode iniciar porque as credenciais do Supabase não foram configuradas no GitHub.
+                    </p>
+                    <div className="text-left mt-6 bg-gray-900 p-4 rounded-lg">
+                        <p className="font-semibold">Ação necessária:</p>
+                        <ol className="list-decimal list-inside mt-2 space-y-2">
+                            <li>Vá até o seu repositório no GitHub.</li>
+                            <li>Navegue até o arquivo <code className="bg-yellow-300 text-black px-2 py-1 rounded">services/supabaseClient.ts</code>.</li>
+                            <li>Clique no ícone de lápis para editar.</li>
+                            <li>Substitua os textos de exemplo pelas suas credenciais reais do Supabase.</li>
+                            <li>Salve a alteração ("Commit changes"). A Vercel irá publicar a nova versão automaticamente.</li>
+                        </ol>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
